@@ -1,0 +1,19 @@
+{
+    "name": "root/root",
+    "autoload": {
+        "psr-4": {
+            "Root\\Root\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "reinanbr",
+            "email": "perseu912@gmail.com"
+        }
+    ],
+    "require": {
+        "workerman/phpsocket.io": "^2.2",
+        "wisembly/elephant.io": "^3.3",
+        "cboden/ratchet": "^0.4.4"
+    }
+}
