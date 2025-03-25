@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat WebSocket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .chat-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        #status {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: red;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        li {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        input {
+            width: 70%;
+            padding: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <p id="status">Offline</p>
+
+    <div class="chat-container">
+        <ul id="messages"></ul>
+        <input id="message" type="text" placeholder="Digite uma mensagem...">
+        <button id="sendButton">Enviar</button>
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://127.0.0.1:2021'); // Agora usando WebSocket puro
+        const status = document.getElementById("status");
+        const messageInput = document.getElementById("message");
+        const messagesList = document.getElementById("messages");
+        const sendButton = document.getElementById("sendButton");
+
+        socket.onopen = () => {
+            status.textContent = "Online";
+            status.style.color = "green";
+        };
+
+        socket.onclose = () => {
+            status.textContent = "Offline";
+            status.style.color = "red";
+        };
+
+        socket.onmessage = (event) => {
+            const li = document.createElement('li');
+            li.textContent = event.data;
+            messagesList.appendChild(li);
+            messagesList.scrollTop = messagesList.scrollHeight; // Auto scroll
+        };
+
+        function sendMessage() {
+            if (messageInput.value.trim()) {
+                socket.send(messageInput.value);
+                messageInput.value = '';
+            }
+        }
+
+        sendButton.addEventListener("click", sendMessage);
+
+        messageInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>
